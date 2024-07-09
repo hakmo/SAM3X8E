@@ -29,6 +29,7 @@
 //#define BOARD_PROTONEER
 //#define BOARD_CMCGRATH
 //#define BOARD_RADDS_16   // NOTE: untested!!
+//#define BOARD_GRBLDUINO_MEGA
 //#define BOARD_MY_MACHINE // Add my_machine_map.h before enabling this!
 
 // Configuration
