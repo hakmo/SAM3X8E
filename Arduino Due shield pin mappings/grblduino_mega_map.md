@@ -2,6 +2,8 @@
 
 ### Pin assignmets for [GRBLDuino Mega] board.
 
+***WARNING - The Due only handles 3.3v IO, but GRBLDuino hardwires 5v IO. You'll need to cut the 5v trace on your GRBLDuino board and blue wire the Due's 3v3 pin to the IO power net.***
+
 Uncomment `#define BOARD_GRBLDUINO_MEGA` in [driver.h](../main/driver.h) to use this mapping.
 
 ``` plain

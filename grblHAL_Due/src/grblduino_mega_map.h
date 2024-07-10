@@ -1,5 +1,5 @@
 /*
-  mega_2560_map.h - driver code for Atmel SAM3X8E ARM processor, pin mappings compatible with grblDuino Mega
+  grblduino_mega_map.h - driver code for Atmel SAM3X8E ARM processor, pin mappings compatible with GRBLDuino Mega
   https://shop.eccentricworkshop.com/product/grblduino-mega-shield-v1/?v=7516fd43adaa
   https://forum.eccentricworkshop.com/viewtopic.php?f=4&t=10
 
@@ -28,7 +28,7 @@
 #error "Axis configuration is not supported!"
 #endif
 
-#define BOARD_NAME "grblDuino Mega"
+#define BOARD_NAME "GRBLDuino Mega"
 #define BOARD_URL "https://shop.eccentricworkshop.com/product/grblduino-mega-shield-v1/?v=7516fd43adaa"
 
  // Define step pulse output pins.
