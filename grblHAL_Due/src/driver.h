@@ -86,6 +86,8 @@ void IRQUnRegister(int32_t IRQnum);
     #include "protoneer_3.xx_map.h"
 #elif defined(BOARD_RADDS_16)
     #include "radds_1.6_map.h"
+#elif defined(BOARD_GRBLDUINO_MEGA)
+    #include "grblduino_mega_map.h"
 #elif defined(BOARD_MY_MACHINE)
     #include "my_machine_map.h"
 #else
