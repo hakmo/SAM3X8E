@@ -136,60 +136,83 @@
 //#define M5_LIMIT_PIN_MAX    12  // Due Digital Pin 51
 #endif
 
+// Define auxiliary output pins
+// #define AUXOUTPUT0_PORT     PIO
+// #define AUXOUTPUT0_PIN      
+// #define AUXOUTPUT1_PORT     PIO
+// #define AUXOUTPUT1_PIN      
+#define AUXOUTPUT2_PORT     PIOC // Spindle PWM, Due Digital Pin 7 / PWML6 B
+#define AUXOUTPUT2_PIN      23
+#define AUXOUTPUT3_PORT     PIOC // Spindle direction, Due Digital Pin 5
+#define AUXOUTPUT3_PIN      25
+#define AUXOUTPUT4_PORT     PIOC // Spindle enable, Due Digital Pin 6
+#define AUXOUTPUT4_PIN      24
+#define AUXOUTPUT5_PORT     PIOC // Coolant flood, Due Digital Pin 8
+#define AUXOUTPUT5_PIN      22
+#define AUXOUTPUT6_PORT     PIOC // Coolant mist, Due Digital Pin 9
+#define AUXOUTPUT6_PIN      21
+
 // Define driver spindle pins
 
 #if DRIVER_SPINDLE_PWM_ENABLE
 #define SPINDLE_PWM_CHANNEL     6
-#define SPINDLE_PWM_PORT        PIOC
-#define SPINDLE_PWM_PIN         23 // Due Digital Pin 7 / PWML6 B
-#else
-#define AUXOUTPUT0_PORT         PIOC
-#define AUXOUTPUT0_PIN          23
+#define SPINDLE_PWM_PORT        AUXOUTPUT2_PORT
+#define SPINDLE_PWM_PIN         AUXOUTPUT2_PIN
 #endif
 
 #if DRIVER_SPINDLE_DIR_ENABLE
-#define SPINDLE_DIRECTION_PORT  PIOC
-#define SPINDLE_DIRECTION_PIN   25  // Due Digital Pin 5
-#else
-#define AUXOUTPUT1_PORT         PIOC
-#define AUXOUTPUT1_PIN          25
+#define SPINDLE_DIRECTION_PORT  AUXOUTPUT3_PORT
+#define SPINDLE_DIRECTION_PIN   AUXOUTPUT3_PIN
 #endif
 
 #if DRIVER_SPINDLE_ENABLE
-#define SPINDLE_ENABLE_PORT     PIOC
-#define SPINDLE_ENABLE_PIN      24  // Due Digital Pin 6
-#else
-#define AUXOUTPUT2_PORT         PIOC
-#define AUXOUTPUT2_PIN          24
+#define SPINDLE_ENABLE_PORT     AUXOUTPUT4_PORT
+#define SPINDLE_ENABLE_PIN      AUXOUTPUT4_PIN
 #endif
 
 // Define flood and mist coolant enable output pins.
-#define COOLANT_FLOOD_PORT  PIOC
-#define COOLANT_FLOOD_PIN   22  // Due Digital Pin 8
-#define COOLANT_MIST_PORT   PIOC
-#define COOLANT_MIST_PIN    21  // Due Digital Pin 9
+#define COOLANT_FLOOD_PORT  AUXOUTPUT5_PORT
+#define COOLANT_FLOOD_PIN   AUXOUTPUT5_PIN
+#define COOLANT_MIST_PORT   AUXOUTPUT6_PORT
+#define COOLANT_MIST_PIN    AUXOUTPUT6_PIN
+
+#define AUXINPUT0_PORT      PIOB // Probe
+#define AUXINPUT0_PIN       20   // Due Analog Pin 11
+#define AUXINPUT1_PORT      PIOA // Safety door
+#define AUXINPUT1_PIN       11   // Due Digital Pin 18
+// #define AUXINPUT2_PORT      PIO
+// #define AUXINPUT2_PIN       
+// #define AUXINPUT3_PORT      PIO 
+// #define AUXINPUT3_PIN       
+#define AUXINPUT4_PORT      PIOB // Reset/EStop
+#define AUXINPUT4_PIN       17   // Due Analog Pin 8
+#define AUXINPUT5_PORT      PIOB // Feed hold
+#define AUXINPUT5_PIN       18   // Due Analog Pin 9
+#define AUXINPUT6_PORT      PIOB // Cycle start
+#define AUXINPUT6_PIN       19   // Due Analog Pin 10
 
 // Define user-control CONTROLs (cycle start, reset, feed hold) input pins.
-#define RESET_PORT          PIOB
-#define RESET_PIN           17  // DUE Analog Pin 8
-#define FEED_HOLD_PORT      PIOB
-#define FEED_HOLD_PIN       18  // DUE Analog Pin 9
-#define CYCLE_START_PORT    PIOB
-#define CYCLE_START_PIN     19  // DUE Analog Pin 10
-
-#define AUXINPUT0_PORT      PIOB
-#define AUXINPUT0_PIN       20 // DUE Analog Pin 11
-#define AUXINPUT1_PORT      PIOA
-#define AUXINPUT1_PIN       0  // DUE Analog Pin CANTX
+#if CONTROL_ENABLE & CONTROL_HALT
+#define RESET_PORT          AUXINPUT4_PORT
+#define RESET_PIN           AUXINPUT4_PIN
+#endif
+#if CONTROL_ENABLE & CONTROL_FEED_HOLD
+#define FEED_HOLD_PORT      AUXINPUT5_PORT
+#define FEED_HOLD_PIN       AUXINPUT5_PIN
+#endif
+#if CONTROL_ENABLE & CONTROL_CYCLE_START
+#define CYCLE_START_PORT    AUXINPUT6_PORT
+#define CYCLE_START_PIN     AUXINPUT6_PIN
+#endif
 
 #if PROBE_ENABLE
-#define PROBE_PORT          AUXINPUT1_PORT
-#define PROBE_PIN           AUXINPUT1_PIN
+#define PROBE_PORT          AUXINPUT0_PORT
+#define PROBE_PIN           AUXINPUT0_PIN
 #endif
 
 #if SAFETY_DOOR_ENABLE
-#define SAFETY_DOOR_PORT    AUXINPUT0_PORT
-#define SAFETY_DOOR_PIN     AUXINPUT0_PIN
+#define SAFETY_DOOR_PORT    AUXINPUT1_PORT
+#define SAFETY_DOOR_PIN     AUXINPUT1_PIN
 #elif MOTOR_FAULT_ENABLE
 #define MOTOR_FAULT_PORT    AUXINPUT0_PORT
 #define MOTOR_FAULT_PIN     AUXINPUT0_PIN
