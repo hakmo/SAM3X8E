@@ -3,7 +3,7 @@
 
   Part of grblHAL
 
-  Copyright (c) 2019-2024 Terje Io
+  Copyright (c) 2019-2025 Terje Io
 
   grblHAL is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -35,11 +35,11 @@
 #include "my_machine.h"
 #endif
 
-#if defined(MCP3221_ENABLE)
-#define I2C_ENABLE 1
-#endif
-
 #include "grbl/driver_opts.h"
+
+#if MODBUS_ENABLE && !defined(SERIAL1_PORT)
+#define SERIAL1_PORT 1
+#endif
 
 /******************************************************************************
 * Definitions for bit band access and dynamic IRQ registration                *
@@ -71,49 +71,66 @@ void IRQUnRegister(int32_t IRQnum);
 #define STEPPER_TIMER_IRQn  TC0_IRQn
 #define STEP_TIMER          (TC0->TC_CHANNEL[1])
 #define STEP_TIMER_IRQn     TC1_IRQn
+#if STEP_INJECT_ENABLE
+#define STEP2_TIMER         (TC1->TC_CHANNEL[0])
+#define STEP2_TIMER_IRQ     TC3_IRQn
+#endif
+
+#ifndef CONTROL_ENABLE
+#define CONTROL_ENABLE (CONTROL_HALT|CONTROL_FEED_HOLD|CONTROL_CYCLE_START)
+#endif
 
 #ifdef BOARD_TINYG2_DUE
-    #include "tinyg2_due_map.h"
+    #include "boards/tinyg2_due_map.h"
 #elif defined(BOARD_RAMPS_16)
-    #include "ramps_1.6_map.h"
+    #include "boards/ramps_1.6_map.h"
 #elif defined(BOARD_RAMPS_SMART)
-    #include "ramps_smart_map.h"
+    #include "boards/ramps_smart_map.h"
 #elif defined(BOARD_CMCGRATH)
-    #include "cmcgrath_rev3_map.h"
+    #include "boards/cmcgrath_rev3_map.h"
 #elif defined(BOARD_MEGA256)
-    #include "mega_2560_map.h"
+    #include "boards/mega_2560_map.h"
 #elif defined(BOARD_PROTONEER)
-    #include "protoneer_3.xx_map.h"
+    #include "boards/protoneer_3.xx_map.h"
 #elif defined(BOARD_RADDS_16)
-    #include "radds_1.6_map.h"
+    #include "boards/radds_1.6_map.h"
 #elif defined(BOARD_GRBLDUINO_MEGA)
-    #include "grblduino_mega_map.h"
+    #include "boards/grblduino_mega_map.h"
 #elif defined(BOARD_MY_MACHINE)
-    #include "my_machine_map.h"
+    #include "boards/my_machine_map.h"
 #else
-    #include "generic_map.h"
+    #include "boards/generic_map.h"
 #endif
 
 // Adjust STEP_PULSE_LATENCY to get accurate step pulse length when required, e.g if using high step rates.
 // The default value is calibrated for 10 microseconds length.
 // NOTE: step output mode, number of axes and compiler optimization settings may all affect this value.
+
+// Minimum pulse off time.
+#ifndef STEP_PULSE_TOFF_MIN
+#define STEP_PULSE_TOFF_MIN 2.0f
+#endif
+// Time from step out to step reset.
+// Adjust for correct step pulse time.
 #ifndef STEP_PULSE_LATENCY
 #define STEP_PULSE_LATENCY 1.0f // microseconds
 #endif
 
 // End configuration
 
-#if !defined(SERIAL2_DEVICE) && (MODBUS_ENABLE & MODBUS_RTU_ENABLED)
-#define SERIAL2_DEVICE 1 // Select serial device for ModBus communication, default is 1, allowed values are 0, 1 and 2
+#ifndef SERIAL_PORT
+#define SERIAL_PORT -1
+#endif
+
+#if !defined(SERIAL1_PORT) && (MODBUS_ENABLE & MODBUS_RTU_ENABLED)
+#define SERIAL1_PORT 1 // Select serial device for ModBus communication, default is 1, allowed values are 0, 1 and 2
 #endif
 
 #if BLUETOOTH_ENABLE == 2
-#define SERIAL2_DEVICE 1
+#define SERIAL1_PORT 1
 #endif
 
-#if TRINAMIC_ENABLE == 2130
-#include "tmc2130/trinamic.h"
-#endif
+#include "grbl/driver_opts2.h"
 
 // Define I2C port/pins
 
@@ -140,18 +157,6 @@ void IRQUnRegister(int32_t IRQnum);
 #endif
 
 #define I2C_CLOCK 100000
-
-// Simple sanity check...
-
-#if KEYPAD_ENABLE == 1 && !defined(I2C_STROBE_PORT)
-#error Keypad plugin not supported!
-#elif I2C_STROBE_ENABLE && !defined(I2C_STROBE_PORT)
-#error I2C strobe not supported!
-#endif
-
-#if MPG_MODE == 1 && !defined(MPG_MODE_PIN)
-#error "MPG_MODE_PIN must be defined!"
-#endif
 
 #if defined(AUXOUTPUT0_PWM_PORT) || defined(AUXOUTPUT1_PWM_PORT) ||\
      defined(AUXOUTPUT0_ANALOG_PORT) || defined(AUXOUTPUT1_ANALOG_PORT) ||\
@@ -198,6 +203,7 @@ void PIO_InputMode (Pio *port, uint32_t bit, bool no_pullup);
 void PIO_EnableInterrupt (const input_signal_t *input, pin_irq_mode_t irq_mode);
 
 void ioports_init (pin_group_pins_t *aux_inputs, pin_group_pins_t *aux_outputs);
+void ioports_init_analog (pin_group_pins_t *aux_inputs, pin_group_pins_t *aux_outputs);
 void ioports_event (input_signal_t *input);
 
 #endif

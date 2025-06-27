@@ -1,11 +1,13 @@
 /*
-  mega_2560_map.h - driver code for Atmel SAM3X8E ARM processor, pin mappings compatible with Arduino Mega 2560
+  grblduino_mega_map.h - driver code for Atmel SAM3X8E ARM processor, pin mappings compatible with GRBLDuino Mega
+  https://shop.eccentricworkshop.com/product/grblduino-mega-shield-v1/?v=7516fd43adaa
+  https://forum.eccentricworkshop.com/viewtopic.php?f=4&t=10
 
   Part of grblHAL
 
-  Copyright (c) 2019-2023 Terje Io
+  Copyright (c) 2019-2023 hakmo
 
-  Mappings according to cpu_map.h for Arduino Mega 2560 : Working @EliteEng
+  Mappings according to https://forum.eccentricworkshop.com/viewtopic.php?f=4&t=10
 
   grblHAL is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,11 +23,13 @@
   grblHAL with Grbl. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#if N_ABC_MOTORS
+
+#if (N_AUTO_SQUARED && N_AUTO_SQUARED < N_ABC_MOTORS) || N_ABC_MOTORS > 3
 #error "Axis configuration is not supported!"
 #endif
 
-#define BOARD_NAME "Mega 2560"
+#define BOARD_NAME "GRBLDuino Mega"
+#define BOARD_URL "https://shop.eccentricworkshop.com/products/grblduino-mega-shield-v1-1"
 
  // Define step pulse output pins.
 #define X_STEP_PORT         PIOA
@@ -61,6 +65,76 @@
 #define Y_LIMIT_PIN         7   // Due Digital Pin 11
 #define Z_LIMIT_PORT        PIOD
 #define Z_LIMIT_PIN         8   // Due Digital Pin 12
+
+// Define homing/hard limit switch max input pins.
+#if X_AUTO_SQUARE
+#define M3_LIMIT_PORT       PIOD
+#define M3_LIMIT_PIN        5   // Due Digital Pin 15
+#else
+#define X_LIMIT_PORT_MAX    PIOD
+#define X_LIMIT_PIN_MAX     5   // Due Digital Pin 15
+#endif
+#if Y_AUTO_SQUARE
+#define M3_LIMIT_PORT       PIOA
+#define M3_LIMIT_PIN        12  // Due Digital Pin 17
+#else
+#define Y_LIMIT_PORT_MAX    PIOA
+#define Y_LIMIT_PIN_MAX     12  // Due Digital Pin 17
+#endif
+#if Z_AUTO_SQUARE
+#define M3_LIMIT_PORT       PIOA
+#define M3_LIMIT_PIN        10  // Due Digital Pin 19
+#else
+#define Z_LIMIT_PORT_MAX    PIOA
+#define Z_LIMIT_PIN_MAX     10  // Due Digital Pin 19
+#endif
+
+// Define ganged axis or A axis step pulse and step direction output pins.
+#if N_ABC_MOTORS > 0
+#define M3_AVAILABLE
+#define M3_STEP_PORT        PIOD
+#define M3_STEP_PIN         2   // Due Digital Pin 27
+#define M3_DIRECTION_PORT   PIOC
+#define M3_DIRECTION_PIN    1   // Due Digital Pin 33
+//#define M3_ENABLE_PORT      PIOC
+//#define M3_ENABLE_PIN       1   // Due Digital Pin 33
+#ifndef M3_LIMIT_PORT
+#define M3_LIMIT_PORT       PIOB
+#define M3_LIMIT_PIN        14  // Due Digital Pin 53
+#endif
+//#define M3_LIMIT_PORT_MAX   PIOA
+//#define M3_LIMIT_PIN_MAX    4   // Due Analog Pin 5
+#endif
+
+// Define ganged axis or B axis step pulse and step direction output pins.
+#if N_ABC_MOTORS > 1
+#define M4_AVAILABLE
+#define M4_STEP_PORT        PIOD
+#define M4_STEP_PIN         3   // Due Digital Pin 28
+#define M4_DIRECTION_PORT   PIOC
+#define M4_DIRECTION_PIN    2   // Due Digital Pin 34
+//#define M4_ENABLE_PORT      PIOC
+//#define M4_ENABLE_PIN       7   // Due Digital Pin 39
+#define M4_LIMIT_PORT       PIOB
+#define M4_LIMIT_PIN        21  // Due Digital Pin 52
+//#define M4_LIMIT_PORT_MAX   PIOA
+//#define M4_LIMIT_PIN_MAX    2   // Due Analog Pin 7
+#endif
+
+// Define ganged axis or C axis step pulse and step direction output pins.
+#if N_ABC_MOTORS == 3
+#define M5_AVAILABLE
+#define M5_STEP_PORT        PIOD
+#define M5_STEP_PIN         6   // Due Digital Pin 29
+#define M5_DIRECTION_PORT   PIOC
+#define M5_DIRECTION_PIN    3   // Due Digital Pin 35
+//#define M5_ENABLE_PORT      PIOC
+//#define M5_ENABLE_PIN       19  // Due Digital Pin 44
+#define M5_LIMIT_PORT       PIOC
+#define M5_LIMIT_PIN        12  // Due Digital Pin 51
+//#define M5_LIMIT_PORT_MAX   PIOC
+//#define M5_LIMIT_PIN_MAX    12  // Due Digital Pin 51
+#endif
 
 // Define driver spindle pins
 
