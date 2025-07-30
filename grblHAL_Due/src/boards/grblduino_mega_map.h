@@ -68,8 +68,8 @@
 
 // Define homing/hard limit switch max input pins.
 #if X_AUTO_SQUARE
-#define M3_LIMIT_PORT       PIOD
-#define M3_LIMIT_PIN        5   // Due Digital Pin 15
+#define M3_LIMIT_PORT       PIOB
+#define M3_LIMIT_PIN        14   // Due Digital Pin 15
 #else
 #define X_LIMIT_PORT_MAX    PIOD
 #define X_LIMIT_PIN_MAX     5   // Due Digital Pin 15
@@ -78,12 +78,12 @@
 #define M3_LIMIT_PORT       PIOA
 #define M3_LIMIT_PIN        12  // Due Digital Pin 17
 #else
-#define Y_LIMIT_PORT_MAX    PIOA
-#define Y_LIMIT_PIN_MAX     12  // Due Digital Pin 17
+#define Y_LIMIT_PORT_MAX    PIOD
+#define Y_LIMIT_PIN_MAX     7  // Due Digital Pin 11
 #endif
 #if Z_AUTO_SQUARE
-#define M3_LIMIT_PORT       PIOA
-#define M3_LIMIT_PIN        10  // Due Digital Pin 19
+#define M4_LIMIT_PORT       PIOB
+#define M4_LIMIT_PIN        21  // Due Digital Pin 19
 #else
 #define Z_LIMIT_PORT_MAX    PIOA
 #define Z_LIMIT_PIN_MAX     10  // Due Digital Pin 19
@@ -115,8 +115,10 @@
 #define M4_DIRECTION_PIN    2   // Due Digital Pin 34
 //#define M4_ENABLE_PORT      PIOC
 //#define M4_ENABLE_PIN       7   // Due Digital Pin 39
+#ifndef M4_LIMIT_PORT
 #define M4_LIMIT_PORT       PIOB
 #define M4_LIMIT_PIN        21  // Due Digital Pin 52
+#endif
 //#define M4_LIMIT_PORT_MAX   PIOA
 //#define M4_LIMIT_PIN_MAX    2   // Due Analog Pin 7
 #endif
@@ -176,8 +178,8 @@
 #define COOLANT_MIST_PORT   AUXOUTPUT6_PORT
 #define COOLANT_MIST_PIN    AUXOUTPUT6_PIN
 
-#define AUXINPUT0_PORT      PIOB // Probe
-#define AUXINPUT0_PIN       20   // Due Analog Pin 11
+#define AUXINPUT0_PORT      PIOA // Probe
+#define AUXINPUT0_PIN       0    // Due Digital Pin 69
 #define AUXINPUT1_PORT      PIOA // Safety door
 #define AUXINPUT1_PIN       11   // Due Digital Pin 18
 // #define AUXINPUT2_PORT      PIO
